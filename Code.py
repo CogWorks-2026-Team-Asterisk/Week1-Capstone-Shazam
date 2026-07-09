@@ -6,8 +6,15 @@ from typing import Tuple
 from numba import njit
 from IPython.display import Audio
 
+%matplotlib notebook
 #Get all the imports and needed libraries
 SAMPLING_RATE = 44100 # Hz
+# git commit test
+from microphone import record_audio
+
+listen_time = 5  # <COGSTUB> seconds
+frames, sample_rate = record_audio(listen_time)  # <COGSTUB> record audio for the listen tim
+
 
 
 Audio(recorded_audio, rate=SAMPLING_RATE)
