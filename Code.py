@@ -5,18 +5,32 @@ from microphone import record_audio
 from typing import Tuple, List
 from numba import njit
 from IPython.display import Audio
+from microphone import record_audio
 #%matplotlib notebook
 
 
 SAMPLING_RATE = 44100 # Hz
-# git commit test
-from microphone import record_audio
 
-listen_time = 10  # <COGSTUB> seconds
-frames, sample_rate = record_audio(listen_time)  # <COGSTUB> record audio for the listen tim
-samples = np.hstack([np.frombuffer(i, np.int16) for i in frames]) #take out samples from the frames and convert to numpy array
-Audio(samples, rate=sample_rate)
-#Audio(recorded_audio, rate=SAMPLING_RATE)
+
+def record_and_save(listen_time: float, file_path: str):
+    frames, sample_rate = record_audio(listen_time)
+
+    samples = np.hstack([np.frombuffer(i, np.int16) for i in frames])
+    array_to_save = np.hstack((sample_rate, samples))
+
+    np.save(file_path, array_to_save)
+
+def load_and_parse(file_path: str) -> Tuple[np.ndarray, int]:
+    loaded_array = np.load(file_path)
+    
+    sample_rate = loaded_array[0]
+    signal = loaded_array[1:]
+    
+    return signal, sample_rate
+
+
+record_and_save(listen_time=5, file_path="song_samp.npy")
+samples, sample_rate = load_and_parse(file_path="song_samp.npy")  #load the song_samp.npy recording
 
 
 
