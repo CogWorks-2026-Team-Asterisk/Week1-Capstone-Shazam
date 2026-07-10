@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 from microphone import record_audio
-from typing import Tuple
+from typing import Tuple, List
 from numba import njit
 from IPython.display import Audio
 #%matplotlib notebook
@@ -17,24 +17,6 @@ frames, sample_rate = record_audio(listen_time)  # <COGSTUB> record audio for th
 samples = np.hstack([np.frombuffer(i, np.int16) for i in frames]) #take out samples from the frames and convert to numpy array
 Audio(samples, rate=sample_rate)
 #Audio(recorded_audio, rate=SAMPLING_RATE)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
