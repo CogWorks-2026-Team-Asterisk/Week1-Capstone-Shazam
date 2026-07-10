@@ -14,12 +14,7 @@ from IPython.display import Audio
 
 
 @njit
-def _peaks(
-    data_2d: np.ndarray,
-    nbrhd_row_offsets: np.ndarray,
-    nbrhd_col_offsets: np.ndarray,
-    amp_min: float
-) -> List[Tuple[int, int]]:
+def _peaks(data_2d: np.ndarray, nbrhd_row_offsets: np.ndarray, nbrhd_col_offsets: np.ndarray, amp_min: float) -> List[Tuple[int, int]]:
 
     peak_locations = []
 
@@ -122,7 +117,52 @@ def identifying_peaks(
 
     return peak_locations, frequencies, times, log_spectrogram
     
+
+
+# Creating fingerprints 
+
+def create_fingerprints(peaks: List[Tuple[int, int]], fanout: int = 5, min_time_delta: int = 1, max_time_delta: int = 50) -> List[Tuple[Tuple[int, int, int], int]]:
+    if fanout < 1:
+        raise ValueError("fanout must be at least 1")
     
+    sorted_peaks = sorted(
+        peaks,
+        key=lambda peak: (peak[1], peak[0])
+    )
+
+    fingerprints = []
+
+    for anchor_index, anchor_peak in enumerate(sorted_peaks):
+        anchor_frequency, anchor_time = anchor_peak
+        targets_added = 0
+
+        for target_frequency, target_time in sorted_peaks[anchor_index + 1:]:
+
+            delta_time = target_time - anchor_time
+
+            if delta_time < min_time_delta:
+                continue
+
+            if delta_time > max_time_delta:
+                break
+
+            fingerprint_key = (
+                anchor_frequency,
+                target_frequency,
+                delta_time
+            )
+
+            fingerprints.append(
+                (fingerprint_key, anchor_time)
+            )
+
+            targets_added += 1
+
+            if targets_added >= fanout:
+                break
+
+    return fingerprints
+
 # Debug/testing
     
 # test_spectrogram = np.array([
@@ -144,9 +184,14 @@ def identifying_peaks(
 # )
 
 # print(detected_peaks)
+# fingerprints = create_fingerprints(
+#     detected_peaks,
+#     fanout=2,
+#     min_time_delta=1,
+#     max_time_delta=5
+# )
 
+# print("Fingerprints:")
 
-# Creating fingerprints (doing it later)
-
-def create_fingerprints(peaks: List[Tuple[int, int]], fanout: int = 5, min_time_delta: int = 1, max_time_delta: int = 50) -> List[Tuple[Tuple[int, int, int], int]]:
-    
+# for fingerprint in fingerprints:
+#     print(fingerprint)
