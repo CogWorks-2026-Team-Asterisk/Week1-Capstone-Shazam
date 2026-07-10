@@ -1,2 +1,4 @@
 # Capstone-Week1---Shazam
-song recognition
+
+Contains a database with a multitude of songs. Uses device's microphone to 
+

@@ -5,20 +5,42 @@ from microphone import record_audio
 from typing import Tuple
 from numba import njit
 from IPython.display import Audio
+#%matplotlib notebook
 
-%matplotlib notebook
-#Get all the imports and needed libraries
+
 SAMPLING_RATE = 44100 # Hz
 # git commit test
 from microphone import record_audio
 
-listen_time = 5  # <COGSTUB> seconds
+listen_time = 10  # <COGSTUB> seconds
 frames, sample_rate = record_audio(listen_time)  # <COGSTUB> record audio for the listen tim
+samples = np.hstack([np.frombuffer(i, np.int16) for i in frames]) #take out samples from the frames and convert to numpy array
+Audio(samples, rate=sample_rate)
+#Audio(recorded_audio, rate=SAMPLING_RATE)
 
 
 
-Audio(recorded_audio, rate=SAMPLING_RATE)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 @njit
 def _peaks(
     data_2d: np.ndarray, nbrhd_row_offsets: np.ndarray, nbrhd_col_offsets: np.ndarray, amp_min: float) -> List[Tuple[int, int]]:
@@ -67,3 +89,4 @@ def local_peak_locations(data_2d: np.ndarray, neighborhood: np.ndarray, amp_min:
 
 
 
+'''
